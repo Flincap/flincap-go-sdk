@@ -1,6 +1,4 @@
-# Flincap SDK
-
-[![npm shield](https://img.shields.io/npm/v/flincap-sdk)](https://www.npmjs.com/package/flincap-sdk)
+# Flincap Go SDK
 
 The Flincap library provides access to the Flincap API from Go.
 
@@ -8,52 +6,80 @@ The Flincap library provides access to the Flincap API from Go.
 To install see the lines below.
 
 ```sh
-# using npm
-npm install flincap-sdk
-
-# using yarn
-yarn add flincap-sdk
+go get -u github.com/flincap/flincap-go-sdk
 ```
 
 ## Usage
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/Flincap/flincap-sdk/tree/main/examples/backend)
-<!-- [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/edit/raven-typescript-example-yrzyda?file=app.ts&view=editor) -->
+```go
+package main
 
-```js
-const baseURL = 'https://flincap.app/api';
-const authToken = 'YOUR_AUTH_TOKEN'; // Optional, only if the API requires authentication
+import (
+	"fmt"
+	"github.com/your-username/flincap-go-sdk"
+)
 
-const apiClient = new FlincapApiClient(baseURL, authToken);
+func main() {
+	token := "YOUR_AUTH_TOKEN"
+	client := flincap.NewFlincapClient(token)
 
-// Get rate
-apiClient.getRate('USDT', 'NGN').then((response) => {
-  console.log(response.data); // Process the rate data here
-}).catch((error) => {
-  console.error(error.message, error.code);
-});
+	// Get rate
+	rate, err := client.GetRate("USDT", "NGN")
+	if err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println("Rate:", rate)
+	}
 
-// Create transaction
-const transactionData = {
-  selectedCrypt: 'USDT',
-  selectedFiat: 'NGN',
-  email: 'test@example.com',
-  bankName: 'Test Bank',
-  bankCode: '12345',
-  accNum: '9876543210',
-  accName: 'John Doe',
-  amountFiat: '5000',
-  amountCrypt: '100',
-  rate: '50',
-};
+	// Get exchange data
+	exchangeData, err := client.GetExchange()
+	if err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println("Exchange Data:", exchangeData)
+	}
 
-apiClient.createTransaction(transactionData).then((response) => {
-  console.log(response.data); // Process the transaction response here
-}).catch((error) => {
-  console.error(error.message, error.code);
-});
+	// Create transaction
+	transactionData := map[string]interface{}{
+		"selectedCrypt": "USDT",
+		"selectedFiat":  "NGN",
+		"email":         "test@example.com",
+		"bankName":      "Test Bank",
+		"bankCode":      "12345",
+		"accNum":        "9876543210",
+		"accName":       "John Doe",
+		"amountFiat":    "5000",
+		"amountCrypt":   "100",
+		"rate":          "50",
+	}
 
-// And so on for other API endpoints...
+	err = client.CreateTransaction(transactionData)
+	if err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println("Transaction created successfully.")
+	}
+
+	// Get transaction by ID
+	transactionID := "YOUR_TRANSACTION_ID"
+	transaction, err := client.GetTransaction(transactionID)
+	if err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println("Transaction:", transaction)
+	}
+
+	// Get transaction history
+	transactionType := "DEPOSIT"
+	selectedFiat := "CRYPTO"
+	history, err := client.GetTransactionHistory(transactionType, selectedFiat)
+	if err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println("Transaction History:", history)
+	}
+}
+
 ```
 
 ## Beta status
@@ -62,6 +88,6 @@ This SDK is in beta, and there may be breaking changes between versions without 
 
 ## Contributing
 
-While we value open-source contributions to this SDK, this library is generated programmatically. Additions made directly to this library would have to be moved over to our generation code, otherwise they would be overwritten upon the next generated release. Feel free to open a PR as a proof of concept, but know that we will not be able to merge it as-is. We suggest [opening an issue](https://github.com/flincap/flincap-sdk) first to discuss with us!
+While we value open-source contributions to this SDK, this library is generated programmatically. Additions made directly to this library would have to be moved over to our generation code, otherwise they would be overwritten upon the next generated release. Feel free to open a PR as a proof of concept, but know that we will not be able to merge it as-is. We suggest [opening an issue](https://github.com/flincap/flincap-go-sdk) first to discuss with us!
 
 On the other hand, contributions to the README are always very welcome!
