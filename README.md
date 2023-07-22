@@ -16,7 +16,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/your-username/flincap-go-sdk"
+	"github.com/flincap/flincap-go-sdk"
 )
 
 func main() {
